@@ -9,13 +9,15 @@
         <link rel="stylesheet" href="assets/css/bootstrap.min.css">
         <style type="text/css">
 			.carregando { color:#666; display:none; }
+            #line-chart { width: 100%; height: 100%; }
 		</style>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
     </head>
     <body>
         <?php $con = new mysqli( 'localhost', 'root', '', 'sys_tsi_ifc' ); ?>
         <?php $con->set_charset("utf8"); ?>
         <nav class="navbar text-center navbar-expand-md navbar-dark bg-dark">
-            <a class="container" href="#">IMA</a>
+            <a class="container" href="#">IMA - BALNEABILIDADE</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbars" aria-controls="navbars" aria-expanded="false" aria-label="Toggle Navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -24,7 +26,7 @@
         <main class="container" role="main">
             <div class="starter-template">
                 <div class="col-lg-12 row">
-                    
+                    <canvas id="line-chart"></canvas>
                 </div>
             </div>
         </main>
@@ -33,19 +35,62 @@
     <script src="assets/js/bootstrap.min.js"></script>
     <script src="assets/js/fontawesome.js"></script>
     <script type="text/javascript">
-		jQuery( document ).ready( function( $ ) {
-			var $table1 = jQuery( '#table-1' );
-			
-			// Initialize DataTable
-			$table1.DataTable( {
-				"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-				"bStateSave": true
-			});
-			
-			// Initalize Select Dropdown after DataTables is created
-			$table1.closest( '.dataTables_wrapper' ).find( 'select' ).select2( {
-				minimumResultsForSearch: -1
-			});
-		} );
+        jQuery(document).ready(function($) {
+            var ecoli    = [];
+            var titles   = [];
+            var points   = [];
+            var collects = [];
+
+            $.ajax({
+                cache:false,
+                type: "GET",
+                url: "ima.php",
+                dataType: "json",
+                crossDomain: true,
+                contentType: 'application/json',
+                success: function (result) {
+                    var colorslist = ["","blue","","orange","","magenta","","green","","black","","navy","","yellow","","red"];
+                    for (var i in result) {
+                        if (i % 2 != 0) {
+                            points.push({
+                                label: result[i].Ponto_de_Coleta,
+                                borderColor: colorslist[i],
+                                fill: false
+                            });
+                        } else {
+                            // for (var j in result[i]) {
+                            //     ecoli = {
+                            //         data: result[i][j].ecoli.split(',')
+                            //     }
+
+                            //     console.log(ecoli);
+                            //     // points.push({
+                            //     // })
+                            // }
+                        }
+                    }
+
+                    var dataSets = points;
+
+                    new Chart(document.getElementById("line-chart"), {
+                        type: 'line',
+                        data: {
+                            labels: [1500,1600,1700,1750,1800,1850,1900,1950,1999,2050],
+                            datasets: dataSets
+                        },
+                        options: {
+                            title: {
+                                display: true,
+                                text: 'CIDADE DE '+ result[1].Municipio +' - '+ result[1].Balneario
+                            }
+                        }
+                    });
+                },
+                error:function(jqXHR, textStatus, errorThrown) {
+                    alert('Erro ao carregar');
+                    console.log(errorThrown);
+                }
+            });
+		});
 	</script>
 </html>

@@ -1,8 +1,8 @@
 <?php
 
 // chart.js - exemplo de grafico
-// header('Cache-Control: no-cache');
-// header('Content-type: application/json; charset="utf-8"', true);
+header('Cache-Control: no-cache');
+header('Content-type: application/json; charset="utf-8"', true);
 
 $layout = curl_init();
 
@@ -19,39 +19,40 @@ $doc->loadHTML($response);
 
 $tables = $doc->getElementsByTagName('table');
 
-foreach ($tables as $key_t => $table) {
-    $ponto = [];
-    $balneabilidade[$key_t] = [];
-
-    if ($key_t % 2 != 0) {
+$bathings = [];
+foreach ($tables as $key => $table) {
+    $points = [];
+    
+    if ($key % 2 != 0) {
         /**
-         * monta o array dos pontos de coleta
-         */
+        * monta o array dos pontos de coleta
+        */
         $labels = $table->getElementsByTagName('label');
-        foreach ($labels as $key_l => $label) {
-            $ponto_table = explode(': ', $label->textContent);
-            $titulo = str_replace(" ", "_", preg_replace("/&([a-z])[a-z]+;/i", "$1", htmlentities(trim($ponto_table[0]))));
-            $valor = $ponto_table[1];
+        foreach ($labels as $label) {
+            $point = explode(': ', $label->textContent);
+            $title = str_replace(" ", "_", preg_replace("/&([a-z])[a-z]+;/i", "$1", htmlentities(trim($point[0]))));
+            $value = $point[1];
 
-            $ponto[$key_l] = [$titulo => $valor];
+            $points[$title] = $value;
         }
-        
+    } else {    
         /**
-         * monta o array dos 
+         * monta o array das linhas de coleta
          */
-        $divs = $table->getElementsByTagName('tr');
-        foreach ($divs as $div) {
-            var_dump($div->textContent);
-        }
+        $collect = [];
+        $lines = $table->getElementsByTagName('tr');
+        foreach ($lines as $line) {
+            $cells = $line->getElementsByTagName('td');
+            foreach ($cells as $cell) {
+                $cellule = $cell->getAttribute('class');
+                if ($cellule != null) $collect[$cellule] = $cell->textContent;
+            }
 
-        $balneabilidade[$key_t] = $ponto;
+            $points[] = array_filter($collect);
+        }
     }
+
+    $bathings[$key] = array_filter($points);
 }
 
-// var_dump($balneabilidade);
-exit;
-
-// curl_close ($layout);
-echo json_encode($balneabilidade);
-
-
+echo json_encode(array_filter($bathings));
