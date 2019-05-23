@@ -49,7 +49,8 @@
                 success: function (result) {
                     var lineT = [];
                     var colorslist = ["","blue","","orange","","magenta","","green","","black","","navy","","yellow","","red"];
-                    $.each(result, function (i, iValue) { 
+                    $.each(result, function (i, iValue) {
+                        console.log(iValue);
                         var series = [];
                         if (i % 2 == 0) {
                             var ecoli = [];
@@ -72,14 +73,15 @@
 
                             points.push({
                                 fill: false,
-                                data: series,
+                                data: series.reverse(),
                                 borderColor: colors,
                                 label: point_collect,
                             });
                         }
                     });
 
-                    var dataLabels = lineT;
+                    // console.log(result);
+                    var dataLabels = lineT.reverse();
                     var dataSets = points;
 
                     new Chart(document.getElementById("line-chart"), {
