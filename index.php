@@ -47,16 +47,20 @@
                 crossDomain: true,
                 contentType: 'application/json',
                 success: function (result) {
+                    var lineT = [];
                     var colorslist = ["","blue","","orange","","magenta","","green","","black","","navy","","yellow","","red"];
                     $.each(result, function (i, iValue) { 
                         var series = [];
                         if (i % 2 == 0) {
                             var ecoli = [];
+                            var dataEcoli = [];
                             $.each(result[i], function (j, jValue) {
                                 ecoli.push(jValue.ecoli);
+                                dataEcoli.push(jValue.data);
                             });
 
                             series = ecoli;
+                            lineT = dataEcoli;
                         }
                         
                         var colors = '';
@@ -75,13 +79,13 @@
                         }
                     });
 
+                    var dataLabels = lineT;
                     var dataSets = points;
-                    console.log(dataSets);
 
                     new Chart(document.getElementById("line-chart"), {
                         type: 'line',
                         data: {
-                            labels: [1500,1600,1700,1750,1800,1850,1900,1950,1999,2050],
+                            labels: dataLabels,
                             datasets: dataSets
                         },
                         options: {
@@ -94,7 +98,6 @@
                 },
                 error:function(jqXHR, textStatus, errorThrown) {
                     alert('Erro ao carregar');
-                    console.log(errorThrown);
                 }
             });
 		});
