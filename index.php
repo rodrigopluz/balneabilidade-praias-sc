@@ -62,14 +62,10 @@
                         var colors = '';
                         var point_collect = '';
                         
-                        if (i % 2 != 0) {
-                            point_collect = result[i].Ponto_de_Coleta;
-                            colors = colorslist[i];
+                        if (series.length != 0) {
+                            point_collect = result[i-1].Ponto_de_Coleta;
+                            colors = colorslist[i-1];
 
-                            console.log(colors);
-                        }
-
-                        if (series != '') {
                             points.push({
                                 fill: false,
                                 data: series,
