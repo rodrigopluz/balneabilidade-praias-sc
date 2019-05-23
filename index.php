@@ -14,8 +14,6 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
     </head>
     <body>
-        <?php $con = new mysqli( 'localhost', 'root', '', 'sys_tsi_ifc' ); ?>
-        <?php $con->set_charset("utf8"); ?>
         <nav class="navbar text-center navbar-expand-md navbar-dark bg-dark">
             <a class="container" href="#">IMA - BALNEABILIDADE</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbars" aria-controls="navbars" aria-expanded="false" aria-label="Toggle Navigation">
@@ -36,8 +34,8 @@
     <script src="assets/js/fontawesome.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function($) {
-            var ecoli    = [];
             var titles   = [];
+            var ecolis   = [];
             var points   = [];
             var collects = [];
 
@@ -50,27 +48,39 @@
                 contentType: 'application/json',
                 success: function (result) {
                     var colorslist = ["","blue","","orange","","magenta","","green","","black","","navy","","yellow","","red"];
-                    for (var i in result) {
-                        if (i % 2 != 0) {
-                            points.push({
-                                label: result[i].Ponto_de_Coleta,
-                                borderColor: colorslist[i],
-                                fill: false
+                    $.each(result, function (i, iValue) { 
+                        var series = [];
+                        if (i % 2 == 0) {
+                            var ecoli = [];
+                            $.each(result[i], function (j, jValue) {
+                                ecoli.push(jValue.ecoli);
                             });
-                        } else {
-                            // for (var j in result[i]) {
-                            //     ecoli = {
-                            //         data: result[i][j].ecoli.split(',')
-                            //     }
 
-                            //     console.log(ecoli);
-                            //     // points.push({
-                            //     // })
-                            // }
+                            series = ecoli;
                         }
-                    }
+                        
+                        var colors = '';
+                        var point_collect = '';
+                        
+                        if (i % 2 != 0) {
+                            point_collect = result[i].Ponto_de_Coleta;
+                            colors = colorslist[i];
+
+                            console.log(colors);
+                        }
+
+                        if (series != '') {
+                            points.push({
+                                fill: false,
+                                data: series,
+                                borderColor: colors,
+                                label: point_collect,
+                            });
+                        }
+                    });
 
                     var dataSets = points;
+                    console.log(dataSets);
 
                     new Chart(document.getElementById("line-chart"), {
                         type: 'line',
