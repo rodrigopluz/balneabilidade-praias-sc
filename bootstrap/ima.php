@@ -9,9 +9,7 @@ $layout = curl_init();
 curl_setopt($layout, CURLOPT_URL,'https://balneabilidade.ima.sc.gov.br/relatorio/historico');
 curl_setopt($layout, CURLOPT_POST, 1);
 curl_setopt($layout, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($layout, CURLOPT_POSTFIELDS,'municipioID=25&localID=44&ano=2019&redirect=true');     // meia-praia - itapema
-// curl_setopt($layout, CURLOPT_POSTFIELDS,'municipioID=25&localID=219&ano=2019&redirect=true');    // praia-porto - itapema
-// curl_setopt($layout, CURLOPT_POSTFIELDS,'municipioID=24&localID=40&ano=2019&redirect=true');     // praia-central - balneario_camboriu
+curl_setopt($layout, CURLOPT_POSTFIELDS,'municipioID=26&localID=45&ano=2019&redirect=true');     // praia-taquaras - balneario_camboriu
 curl_setopt($layout, CURLOPT_SSL_VERIFYHOST, false);
 curl_setopt($layout, CURLOPT_SSL_VERIFYPEER, false);
 
