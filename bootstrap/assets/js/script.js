@@ -16,10 +16,15 @@ $(document).ready(function () {
   function fetchMunicipioData(municipioId) {
     $.ajax({
       url: "ima.php",
-      method: "GET",
+      method: "POST",
       dataType: "json",
       data: { municipio: municipioId }, // Envie o município como parâmetro
       success: function (result) {
+        if (!result || result.length === 0) {
+          alert("Nenhum dado encontrado para o município selecionado.");
+          return;
+        }
+
         const points = [];
         let dataLabels = [];
 
@@ -40,7 +45,11 @@ $(document).ready(function () {
           }
         });
 
-        renderChart(dataLabels, points, result[1]);
+        if (points.length > 0 && dataLabels.length > 0) {
+          renderChart(dataLabels, points, result[1]);
+        } else {
+          alert("Não foi possível processar os dados do gráfico.");
+        }
       },
       error: function () {
         alert("Erro ao carregar os dados.");
