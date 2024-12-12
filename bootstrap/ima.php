@@ -4,11 +4,20 @@
 header('Cache-Control: no-cache');
 header('Content-type: application/json; charset=utf-8');
 
+$municipioID = isset($_GET['municipioID']) ? intval($_GET['municipioID']) : 25; // Valor padrão: 25
+$localID = isset($_GET['localID']) ? intval($_GET['localID']) : 0;              // Valor padrão: 0
+$ano = isset($_GET['ano']) ? intval($_GET['ano']) : date('Y');
+
 $curl = curl_init();
 curl_setopt($curl, CURLOPT_URL, 'https://balneabilidade.ima.sc.gov.br/relatorio/historico');
 curl_setopt($curl, CURLOPT_POST, 1);
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($curl, CURLOPT_POSTFIELDS, 'municipioID=25&localID=0&ano=2024&redirect=true'); // Praia Taquaras - Balneário Camboriú
+curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query([
+    'municipioID' => $municipioID,
+    'localID' => $localID,
+    'ano' => $ano,
+    'redirect' => 'true',
+]));
 curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
