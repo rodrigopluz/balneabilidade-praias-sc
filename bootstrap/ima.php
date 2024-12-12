@@ -8,7 +8,7 @@ $curl = curl_init();
 curl_setopt($curl, CURLOPT_URL, 'https://balneabilidade.ima.sc.gov.br/relatorio/historico');
 curl_setopt($curl, CURLOPT_POST, 1);
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($curl, CURLOPT_POSTFIELDS, 'municipioID=26&localID=45&ano=2019&redirect=true'); // Praia Taquaras - Balneário Camboriú
+curl_setopt($curl, CURLOPT_POSTFIELDS, 'municipioID=25&localID=0&ano=2024&redirect=true'); // Praia Taquaras - Balneário Camboriú
 curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
