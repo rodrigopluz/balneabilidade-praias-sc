@@ -23,7 +23,7 @@
     </header>
     <main class="container">
         <div class="starter-template">
-            <canvas id="line-chart"></canvas>
+            <!-- <canvas id="line-chart"></canvas> -->
         </div>
     </main>
 </body>
