@@ -5,37 +5,48 @@ $(document).ready(function () {
     "pink", "red", "ruby", "iron"
   ];
 
-  $.ajax({
-    url: "ima.php",
-    method: "GET",
-    dataType: "json",
-    success: function (result) {
-      const points = [];
-      let dataLabels = [];
+  $('#municipio-select').on('change', function () {
+    const selectedMunicipio = $(this).val();
 
-      result.forEach((item, index) => {
-        if (index % 2 === 0 && item) {
-          const series = item.map(data => data.ecoli);
-          const dates = item.map(data => data.data);
-
-          if (series.length > 0) {
-            points.push({
-              label: `${result[index - 1].Ponto_de_Coleta}: ${result[index - 1].Localizacao}`,
-              data: series.reverse(),
-              borderColor: colorsList[index - 1],
-              fill: false
-            });
-            dataLabels = dates.reverse();
-          }
-        }
-      });
-
-      renderChart(dataLabels, points, result[1]);
-    },
-    error: function () {
-      alert("Erro ao carregar os dados.");
+    if (selectedMunicipio) {
+      fetchMunicipioData(selectedMunicipio);
     }
   });
+
+  function fetchMunicipioData(municipioId) {
+    $.ajax({
+      url: "ima.php",
+      method: "GET",
+      dataType: "json",
+      data: { municipio: municipioId }, // Envie o município como parâmetro
+      success: function (result) {
+        const points = [];
+        let dataLabels = [];
+
+        result.forEach((item, index) => {
+          if (index % 2 === 0 && item) {
+            const series = item.map(data => data.ecoli);
+            const dates = item.map(data => data.data);
+
+            if (series.length > 0) {
+              points.push({
+                label: `${result[index - 1].Ponto_de_Coleta}: ${result[index - 1].Localizacao}`,
+                data: series.reverse(),
+                borderColor: colorsList[index - 1],
+                fill: false
+              });
+              dataLabels = dates.reverse();
+            }
+          }
+        });
+
+        renderChart(dataLabels, points, result[1]);
+      },
+      error: function () {
+        alert("Erro ao carregar os dados.");
+      }
+    });
+  }
 
   function renderChart(labels, datasets, metaInfo) {
     const [day, month, year] = labels[0].split('/');
@@ -54,4 +65,3 @@ $(document).ready(function () {
     });
   }
 });
-
