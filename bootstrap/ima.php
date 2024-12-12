@@ -2,20 +2,31 @@
 
 // chart.js - exemplo de grafico
 header('Cache-Control: no-cache');
-header('Content-type: application/json; charset="utf-8"', true);
+header('Content-type: application/json; charset=utf-8');
 
-$layout = curl_init();
+$curl = curl_init();
+curl_setopt($curl, CURLOPT_URL, 'https://balneabilidade.ima.sc.gov.br/relatorio/historico');
+curl_setopt($curl, CURLOPT_POST, 1);
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($curl, CURLOPT_POSTFIELDS, 'municipioID=26&localID=45&ano=2019&redirect=true'); // Praia Taquaras - Balneário Camboriú
+curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
-curl_setopt($layout, CURLOPT_URL,'https://balneabilidade.ima.sc.gov.br/relatorio/historico');
-curl_setopt($layout, CURLOPT_POST, 1);
-curl_setopt($layout, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($layout, CURLOPT_POSTFIELDS,'municipioID=26&localID=45&ano=2019&redirect=true');     // praia-taquaras - balneario_camboriu
-curl_setopt($layout, CURLOPT_SSL_VERIFYHOST, false);
-curl_setopt($layout, CURLOPT_SSL_VERIFYPEER, false);
+$response = curl_exec($curl);
+if ($response === false) {
+    echo json_encode(['error' => 'Erro ao acessar a URL: ' . curl_error($curl)]);
+    curl_close($curl);
+    exit;
+}
+curl_close($curl);
 
-$response = curl_exec($layout);
 $doc = new DOMDocument();
-$doc->loadHTML($response);
+libxml_use_internal_errors(true); // Suprime erros de parsing de HTML inválido
+if (!$doc->loadHTML($response)) {
+    echo json_encode(['error' => 'Erro ao processar o HTML recebido']);
+    exit;
+}
+libxml_clear_errors();
 
 $tables = $doc->getElementsByTagName('table');
 
@@ -30,29 +41,35 @@ foreach ($tables as $key => $table) {
         $labels = $table->getElementsByTagName('label');
         foreach ($labels as $label) {
             $point = explode(': ', $label->textContent);
-            $title = str_replace(" ", "_", preg_replace("/&([a-z])[a-z]+;/i", "$1", htmlentities(trim($point[0]))));
-            $value = $point[1];
-
-            $points[$title] = $value;
+            if (count($point) === 2) {
+                $title = str_replace(" ", "_", preg_replace("/&([a-z])[a-z]+;/i", "$1", htmlentities(trim($point[0]))));
+                $value = trim($point[1]);
+                $points[$title] = $value;
+            }
         }
     } else {    
         /**
          * monta o array das linhas de coleta
          */
-        $collect = [];
-        $lines = $table->getElementsByTagName('tr');
-        foreach ($lines as $line) {
-            $cells = $line->getElementsByTagName('td');
+        $rows = $table->getElementsByTagName('tr');
+        foreach ($rows as $row) {
+            $cellsData = [];
+            $cells = $row->getElementsByTagName('td');
             foreach ($cells as $cell) {
-                $cellule = $cell->getAttribute('class');
-                if ($cellule != null) $collect[$cellule] = $cell->textContent;
+                $cellClass = $cell->getAttribute('class');
+                if ($cellClass) {
+                    $cellsData[$cellClass] = trim($cell->textContent);
+                }
             }
-
-            $points[] = array_filter($collect);
+            if (!empty($cellsData)) {
+                $points[] = $cellsData;
+            }
         }
     }
 
-    $bathings[$key] = array_filter($points);
+    if (!empty($points)) {
+        $bathings[$key] = $points;
+    }
 }
 
-echo json_encode(array_filter($bathings));
+echo json_encode($bathings, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
