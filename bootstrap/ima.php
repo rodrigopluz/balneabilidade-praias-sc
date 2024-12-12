@@ -18,9 +18,9 @@ curl_setopt($curl, CURLOPT_POST, 1);
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query([
 	'municipioID' => $municipio,
-	'localID' => 0,
-	'ano' => 2024,
-	'redirect' => true,
+	'localID' => "0",
+	'ano' => "2024",
+	'redirect' => "true",
 ]));
 curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
