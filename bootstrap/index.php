@@ -10,15 +10,17 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js" defer></script>
     <script src="assets/js/jquery.min.js" defer></script>
-    <script src="assets/js/script.js" defer></script>
+    <!-- <script src="assets/js/script.js" defer></script> -->
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-md navbar-dark bg-dark">
             <a class="container navbar-brand" href="#">IMA - BALNEABILIDADE</a>
+            <!--
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle Navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            -->
         </nav>
     </header>
     <main class="container">
