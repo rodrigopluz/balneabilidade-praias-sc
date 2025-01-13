@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@balneabilidade/*": [
+        "packages/*/src"
+      ]
+    }
+  },
+  "include": [
+    "packages/*/src"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

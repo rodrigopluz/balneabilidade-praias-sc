@@ -1,0 +1,26 @@
+{
+  "name": "balneabilidade-praias-sc",
+  "private": true,
+  "version": "1.0",
+  "main": "index.js",
+  "author": {
+    "name": "Rodrigo Pereira",
+    "email": "rodrigopluz@gmail.com"
+  },
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:frontend": "yarn workspace @balneabilidade/client dev",
+    "dev:backend": "yarn workspace @balneabilidade/server dev",
+    "dev": "concurrently \"yarn run dev:frontend\" \"yarn run dev:backend\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "dependencies": {
+    "@balneabilidade/client": "*",
+    "@balneabilidade/server": "*"
+  }
+}
