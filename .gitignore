@@ -55,3 +55,6 @@ vite-react/.vite/
 
 # Ignore all files in the public directory except for ./claude
 ./claude
+bootstrap/
+materialize/
+semantic/
