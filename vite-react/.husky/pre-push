@@ -1,0 +1,44 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "🔍 Running pre-push checks..."
+
+# Change to project root
+cd "$(dirname "$0")/.." || exit 1
+
+# Check if yarn is available
+if ! command -v yarn > /dev/null 2>&1; then
+    echo "❌ yarn is not installed. Please install yarn first."
+    exit 1
+fi
+
+# Install dependencies if node_modules doesn't exist
+if [ ! -d "node_modules" ]; then
+    echo "📦 Installing dependencies..."
+    yarn install --frozen-lockfile
+fi
+
+echo ""
+echo "🧪 Running Client Tests with Coverage..."
+cd packages/client || exit 1
+yarn test:coverage
+CLIENT_RESULT=$?
+cd ../..
+
+echo ""
+echo "🧪 Running Server Tests with Coverage..."
+cd packages/server || exit 1
+yarn test:coverage
+SERVER_RESULT=$?
+cd ../..
+
+echo ""
+if [ $CLIENT_RESULT -ne 0 ] || [ $SERVER_RESULT -ne 0 ]; then
+    echo "❌ Tests failed. Please fix the issues before pushing."
+    echo "   Client tests: $([ $CLIENT_RESULT -eq 0 ] && echo '✅' || echo '❌')"
+    echo "   Server tests: $([ $SERVER_RESULT -eq 0 ] && echo '✅' || echo '❌')"
+    exit 1
+fi
+
+echo ""
+echo "✅ All tests passed with required coverage!"

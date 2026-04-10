@@ -14,10 +14,16 @@
   "scripts": {
     "dev:frontend": "yarn workspace @balneabilidade/client dev",
     "dev:backend": "yarn workspace @balneabilidade/server dev",
-    "dev": "concurrently \"yarn run dev:frontend\" \"yarn run dev:backend\""
+    "dev": "concurrently \"yarn run dev:frontend\" \"yarn run dev:backend\"",
+    "test": "yarn workspace @balneabilidade/client test && yarn workspace @balneabilidade/server test",
+    "test:coverage": "yarn workspace @balneabilidade/client test:coverage && yarn workspace @balneabilidade/server test:coverage",
+    "test:ci": "yarn workspace @balneabilidade/client test:ci && yarn workspace @balneabilidade/server test:ci",
+    "prepare": "husky install"
   },
   "devDependencies": {
-    "concurrently": "^9.1.2"
+    "concurrently": "^9.1.2",
+    "husky": "^9.1.7",
+    "tsx": "^4.21.0"
   },
   "dependencies": {
     "@balneabilidade/client": "*",
