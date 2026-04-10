@@ -1,21 +1,160 @@
-![version](https://img.shields.io/badge/version-1.0.0-blue.svg) 
+![version](https://img.shields.io/badge/version-1.0.0-blue.svg)
 [![license](https://img.shields.io/apm/l/vim-mode.svg)](LICENSE)
 ![Build Status](https://api.travis-ci.org/cakephp/app.png)
 
 # Raspagem de Dados - Balneabilidade IMA
 
-Balneabilidade - Tópicos Avançados em Programação Web
+# Balneabilidade Praias SC
 
-Usado os FrameWorks Front-End **Bootstrap** - **Materialize** - **Semantic UI**
+Sistema de monitoramento da balneabilidade das praias de Santa Catarina.
+
+## Requisitos
+
+- Node.js >= 18.19.1
+- Yarn >= 1.22.22
+
+## Instalação
+
+```bash
+# Instalar dependências
+yarn install
+
+# Configurar Husky (pre-push hook)
+yarn prepare
+```
+
+## Scripts
+
+### Desenvolvimento
+
+```bash
+# Executar ambos frontend e backend
+yarn dev
+
+# Executar apenas o frontend
+yarn dev:frontend
+
+# Executar apenas o backend
+yarn dev:backend
+```
+
+### Testes
+
+```bash
+# Executar todos os testes
+yarn test
+
+# Executar testes com cobertura
+yarn test:coverage
+
+# Executar testes do frontend
+yarn workspace @balneabilidade/client test
+
+# Executar testes do backend
+yarn workspace @balneabilidade/server test
+
+# Executar testes do frontend com cobertura
+yarn workspace @balneabilidade/client test:coverage
+
+# Executar testes do backend com cobertura
+yarn workspace @balneabilidade/server test:coverage
+```
+
+### Build
+
+```bash
+# Build do frontend
+yarn workspace @balneabilidade/client build
+
+# Build do backend
+yarn workspace @balneabilidade/server build
+```
+
+### Linting
+
+```bash
+# Linting do frontend
+yarn workspace @balneabilidade/client lint
+
+# Linting do backend
+yarn workspace @balneabilidade/server lint
+```
+
+## Estrutura do Projeto
 
 ```
-Links para cada um dos FrameWorks
+vite-react/
+├── packages/
+│   ├── client/          # Frontend (React + Vite)
+│   │   ├── src/
+│   │   │   ├── component/    # Componentes React
+│   │   │   ├── data/        # Dados estáticos
+│   │   │   ├── i18n/        # Internacionalização
+│   │   │   └── test/        # Testes unitários
+│   │   └── vitest.config.ts
+│   └── server/          # Backend (Express + TypeScript)
+│       ├── src/
+│       │   ├── test/         # Testes unitários
+│       │   ├── ima.ts        # Roteador da API IMA
+│       │   ├── index.ts      # Entry point
+│       │   └── utils.ts      # Funções utilitárias
+│       └── vitest.config.ts
+├── .husky/              # Git hooks
+│   └── pre-push         # Hook que executa testes antes do push
+├── package.json
+└── yarn.lock
+```
 
-Bootstrap -> (http://127.0.0.1/balneabilidade-tapw/bootstrap)
+## Pre-push Hook
 
-Materialize -> (http://127.0.0.1/balneabilidade-tapw/materialize)
+Antes de fazer `git push`, o Husky executa automaticamente:
 
-Semantic UI -> (http://127.0.0.1/balneabilidade-tapw/semantic)
+1. Testes do frontend com cobertura
+2. Testes do backend com cobertura
+
+Se os testes falharem ou a cobertura for inferior a 95%, o push será bloqueado.
+
+## Cobertura de Testes
+
+- **Linhas**: >= 95%
+- **Funções**: >= 70%
+- **Branches**: >= 70%
+
+## Tecnologias
+
+### Frontend
+
+- React 18
+- Vite
+- Vitest
+- Chart.js / react-chartjs-2
+- Bootstrap 5
+- TypeScript
+
+### Backend
+
+- Express
+- TypeScript
+- Vitest
+- Zod (validação)
+- JSDOM (parsing HTML)
+- node-fetch
+
+## API
+
+### Endpoints
+
+- `GET /` - Informações da API
+- `GET /health` - Status de saúde
+- `POST /api/ima/chart` - Dados de balneabilidade
+
+### Parâmetros
+
+```json
+{
+  "municipio": "2",
+  "ano": "2026"
+}
 ```
 
 ## Browser Suportados
@@ -36,3 +175,6 @@ Semantic UI -> (http://127.0.0.1/balneabilidade-tapw/semantic)
   </tr>
 </table>
 
+## Licença
+
+MIT
