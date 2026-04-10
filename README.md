@@ -4,8 +4,6 @@
 
 # Raspagem de Dados - Balneabilidade IMA
 
-# Balneabilidade Praias SC
-
 Sistema de monitoramento da balneabilidade das praias de Santa Catarina.
 
 ## Requisitos
