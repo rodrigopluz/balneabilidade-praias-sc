@@ -54,7 +54,7 @@ vite-react/.vite/
 *.local
 
 # Ignore all files in the public directory except for ./claude
-./claude
+.claude/
 bootstrap/
 materialize/
 semantic/
