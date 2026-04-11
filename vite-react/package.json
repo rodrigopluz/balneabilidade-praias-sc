@@ -7,7 +7,7 @@
     "name": "Rodrigo Pereira",
     "email": "rodrigopluz@gmail.com"
   },
-  "license": "MIT",
+  "license": "Apache License 2.0",
   "workspaces": [
     "packages/*"
   ],
@@ -18,6 +18,11 @@
     "test": "yarn workspace @balneabilidade/client test && yarn workspace @balneabilidade/server test",
     "test:coverage": "yarn workspace @balneabilidade/client test:coverage && yarn workspace @balneabilidade/server test:coverage",
     "test:ci": "yarn workspace @balneabilidade/client test:ci && yarn workspace @balneabilidade/server test:ci",
+    "test:integration": "yarn workspace @balneabilidade/server test:integration",
+    "perf:load": "yarn workspace @balneabilidade/server perf:load",
+    "perf:benchmark": "yarn workspace @balneabilidade/server perf:benchmark",
+    "perf:k6": "yarn workspace @balneabilidade/server perf:k6",
+    "perf:k6:stress": "yarn workspace @balneabilidade/server perf:k6:stress",
     "prepare": "husky install"
   },
   "devDependencies": {

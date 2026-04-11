@@ -1,6 +1,6 @@
 ![version](https://img.shields.io/badge/version-1.0.0-blue.svg)
-[![license](https://img.shields.io/apm/l/vim-mode.svg)](LICENSE)
-![Build Status](https://api.travis-ci.org/cakephp/app.png)
+![coverage](https://img.shields.io/badge/coverage-95%25-orange)
+![Apache License 2.0](https://img.shields.io/badge/license-Apache%20License%202.0-blue)
 
 # Raspagem de Dados - Balneabilidade IMA
 
@@ -8,7 +8,7 @@ Sistema de monitoramento da balneabilidade das praias de Santa Catarina.
 
 ## Requisitos
 
-- Node.js >= 18.19.1
+- Node.js >= 18.19.1x
 - Yarn >= 1.22.22
 
 ## Instalação
@@ -36,10 +36,10 @@ yarn dev:frontend
 yarn dev:backend
 ```
 
-### Testes
+### Testes Unitários
 
 ```bash
-# Executar todos os testes
+# Executar todos os testes unitários
 yarn test
 
 # Executar testes com cobertura
@@ -50,12 +50,29 @@ yarn workspace @balneabilidade/client test
 
 # Executar testes do backend
 yarn workspace @balneabilidade/server test
+```
 
-# Executar testes do frontend com cobertura
-yarn workspace @balneabilidade/client test:coverage
+### Testes de Integração
 
-# Executar testes do backend com cobertura
-yarn workspace @balneabilidade/server test:coverage
+```bash
+# Executar testes de integração do backend
+yarn workspace @balneabilidade/server test:integration
+```
+
+### Testes de Performance
+
+```bash
+# Load test (requer servidor rodando na porta 3001)
+yarn workspace @balneabilidade/server perf:load
+
+# Benchmark de endpoints
+yarn workspace @balneabilidade/server perf:benchmark
+
+# k6 load test (requer k6 instalado)
+yarn workspace @balneabilidade/server perf:k6
+
+# k6 stress test
+yarn workspace @balneabilidade/server perf:k6:stress
 ```
 
 ### Build
@@ -83,22 +100,23 @@ yarn workspace @balneabilidade/server lint
 ```
 vite-react/
 ├── packages/
-│   ├── client/          # Frontend (React + Vite)
+│   ├── client/                    # Frontend (React + Vite)
 │   │   ├── src/
-│   │   │   ├── component/    # Componentes React
-│   │   │   ├── data/        # Dados estáticos
-│   │   │   ├── i18n/        # Internacionalização
-│   │   │   └── test/        # Testes unitários
+│   │   │   ├── component/         # Componentes React
+│   │   │   ├── data/              # Dados estáticos
+│   │   │   ├── i18n/              # Internacionalização
+│   │   │   └── test/              # Testes unitários
 │   │   └── vitest.config.ts
-│   └── server/          # Backend (Express + TypeScript)
+│   └── server/                    # Backend (Express + TypeScript)
 │       ├── src/
-│       │   ├── test/         # Testes unitários
-│       │   ├── ima.ts        # Roteador da API IMA
-│       │   ├── index.ts      # Entry point
-│       │   └── utils.ts      # Funções utilitárias
+│       │   ├── test/              # Testes unitários e integração
+│       │   ├── performance/       # Scripts de performance
+│       │   ├── ima.ts             # Roteador da API IMA
+│       │   ├── index.ts           # Entry point
+│       │   └── utils.ts           # Funções utilitárias
 │       └── vitest.config.ts
-├── .husky/              # Git hooks
-│   └── pre-push         # Hook que executa testes antes do push
+├── .husky/                        # Git hooks
+│   └── pre-push                   # Hook que executa testes antes do push
 ├── package.json
 └── yarn.lock
 ```
@@ -111,6 +129,28 @@ Antes de fazer `git push`, o Husky executa automaticamente:
 2. Testes do backend com cobertura
 
 Se os testes falharem ou a cobertura for inferior a 95%, o push será bloqueado.
+
+## Testes
+
+### Testes Unitários
+
+- **Client**: 49 testes (Vitest)
+- **Server**: 62 testes (Vitest)
+- **Total**: 111 testes
+
+### Testes de Integração
+
+- 21 testes de endpoints da API (supertest)
+- Testa fluxos completos de requisição/resposta
+
+### Testes de Performance
+
+Scripts disponíveis:
+
+- `load-test-cli.js` - Load test simples com Node.js
+- `benchmark.js` - Benchmark de latência por endpoint
+- `load-test.js` - Load test com k6 (requer instalação do k6)
+- `stress-test.js` - Stress test com k6
 
 ## Cobertura de Testes
 
@@ -134,6 +174,7 @@ Se os testes falharem ou a cobertura for inferior a 95%, o push será bloqueado.
 - Express
 - TypeScript
 - Vitest
+- Supertest
 - Zod (validação)
 - JSDOM (parsing HTML)
 - node-fetch
@@ -155,9 +196,16 @@ Se os testes falharem ou a cobertura for inferior a 95%, o push será bloqueado.
 }
 ```
 
+## Licença
+
+MIT
+
 ## Browser Suportados
 
 <img src="https://s3.amazonaws.com/creativetim_bucket/github/browser/chrome.png" width="64" height="64"> <img src="https://s3.amazonaws.com/creativetim_bucket/github/browser/firefox.png" width="64" height="64"> <img src="https://s3.amazonaws.com/creativetim_bucket/github/browser/edge.png" width="64" height="64"> <img src="https://s3.amazonaws.com/creativetim_bucket/github/browser/safari.png" width="64" height="64"> <img src="https://s3.amazonaws.com/creativetim_bucket/github/browser/opera.png" width="64" height="64">
+
+![NODE.JS](https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white)
+![REACTJS](https://img.shields.io/badge/-ReactJs-61DAFB?logo=react&logoColor=white&style=for-the-badge)
 
 ## Autor
 
@@ -172,7 +220,3 @@ Se os testes falharem ou a cobertura for inferior a 95%, o push será bloqueado.
     </td>
   </tr>
 </table>
-
-## Licença
-
-MIT

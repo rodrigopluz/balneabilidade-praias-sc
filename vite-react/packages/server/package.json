@@ -2,7 +2,7 @@
   "name": "@balneabilidade/server",
   "private": true,
   "version": "2.0.0",
-  "license": "MIT",
+  "license": "Apache License 2.0",
   "type": "module",
   "main": "./dist/index.js",
   "scripts": {
