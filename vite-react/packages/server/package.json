@@ -13,7 +13,12 @@
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest run --coverage",
-    "test:ci": "vitest run --coverage --reporter=json --outputFile=coverage/coverage-final.json"
+    "test:ci": "vitest run --coverage --reporter=json --outputFile=coverage/coverage-final.json",
+    "test:integration": "vitest run src/test/integration.test.ts",
+    "perf:load": "node performance/load-test-cli.js",
+    "perf:benchmark": "node performance/benchmark.js",
+    "perf:k6": "k6 run performance/load-test.js",
+    "perf:k6:stress": "k6 run performance/stress-test.js"
   },
   "dependencies": {
     "compression": "^1.7.4",
@@ -32,6 +37,7 @@
     "@types/jsdom": "^21.1.7",
     "@types/node": "^22.10.5",
     "@types/node-fetch": "^2.6.12",
+    "@types/supertest": "^7.2.0",
     "@vitest/coverage-v8": "^3.0.0",
     "supertest": "^7.2.2",
     "tsc-alias": "^1.8.10",
