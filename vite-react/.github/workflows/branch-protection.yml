@@ -1,0 +1,54 @@
+name: Branch Protection Setup
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to protect'
+        required: true
+        default: 'main'
+
+jobs:
+  setup-protection:
+    name: Setup Branch Protection
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Branch Protection (Main)
+        run: |
+          echo "📋 Configurando branch protection para: ${{ inputs.branch }}"
+          echo ""
+          echo "⚠️  Nota: Esta configuração precisa ser aplicada manualmente no GitHub"
+          echo ""
+          echo "## Configurações Recomendadas para Branch Protection"
+          echo ""
+          echo "### main/master:"
+          echo "```"
+          echo "✓ Require pull request before merging"
+          echo "✓ Require at least 2 approvals"
+          echo "✓ Dismiss stale reviews"
+          echo "✓ Require status checks to pass before merging:"
+          echo "  - ci (Tests)"
+          echo "  - lint (Linting)"
+          echo "  - build (Build)"
+          echo "✓ Require branches to be up to date before merge"
+          echo "✓ Do not allow bypassing the above settings"
+          echo "```"
+          echo ""
+          echo "### develop:"
+          echo "```"
+          echo "✓ Require pull request before merging"
+          echo "✓ Require at least 1 approval"
+          echo "✓ Dismiss stale reviews"
+          echo "✓ Require status checks to pass:"
+          echo "  - ci"
+          echo "✓ Require branches to be up to date before merge"
+          echo "```"
+          echo ""
+          echo "## Para aplicar:"
+          echo "1. Vá em: Settings → Branches → Add rule"
+          echo "2. Branch name pattern: ${{ inputs.branch }}"
+          echo "3. Configure as opções acima"

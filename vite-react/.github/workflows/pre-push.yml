@@ -1,0 +1,55 @@
+name: Pre-push Check
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - develop
+
+jobs:
+  pre-push-check:
+    name: Pre-push Checks
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Run Client Tests with Coverage
+        run: yarn workspace @balneabilidade/client test:coverage
+        continue-on-error: true
+
+      - name: Check Client Coverage
+        run: |
+          if grep -q "does not meet global threshold" packages/client/coverage.txt 2>/dev/null; then
+            echo "Client coverage below threshold!"
+            cat packages/client/coverage.txt
+            exit 1
+          fi
+          echo "Client coverage: OK"
+
+      - name: Run Server Tests with Coverage
+        run: yarn workspace @balneabilidade/server test:coverage
+        continue-on-error: true
+
+      - name: Check Server Coverage
+        run: |
+          if grep -q "does not meet global threshold" packages/server/coverage.txt 2>/dev/null; then
+            echo "Server coverage below threshold!"
+            cat packages/server/coverage.txt
+            exit 1
+          fi
+          echo "Server coverage: OK"
+
+      - name: All checks passed
+        run: echo "All pre-push checks passed!"

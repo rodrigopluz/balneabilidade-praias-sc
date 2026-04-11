@@ -1,0 +1,99 @@
+name: Deploy Notification
+
+on:
+  workflow_run:
+    workflows: ["Vercel Deployment"]
+    types: [completed]
+
+jobs:
+  notify-success:
+    name: Notify Success
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
+    
+    steps:
+      - name: Send Slack Notification
+        if: env.SLACK_WEBHOOK != ''
+        run: |
+          curl -X POST $SLACK_WEBHOOK \
+            -H 'Content-Type: application/json' \
+            -d '{
+              "text": "✅ Deploy realizado com sucesso!",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "✅ *Deploy realizado com sucesso!*"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {"type": "mrkdwn", "text": "*Repositório:*\n${{ github.repository }}"},
+                    {"type": "mrkdwn", "text": "*Branch:*\n${{ github.ref_name }}"},
+                    {"type": "mrkdwn", "text": "*Workflow:*\n${{ github.event.workflow_run.name }}"},
+                    {"type": "mrkdwn", "text": "*Actor:*\n${{ github.actor }}"}
+                  ]
+                }
+              ]
+            }'
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
+  notify-failure:
+    name: Notify Failure
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'failure'
+    
+    steps:
+      - name: Send Slack Notification
+        if: env.SLACK_WEBHOOK != ''
+        run: |
+          curl -X POST $SLACK_WEBHOOK \
+            -H 'Content-Type: application/json' \
+            -d '{
+              "text": "❌ Deploy falhou!",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "❌ *Deploy falhou!*"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {"type": "mrkdwn", "text": "*Repositório:*\n${{ github.repository }}"},
+                    {"type": "mrkdwn", "text": "*Branch:*\n${{ github.ref_name }}"},
+                    {"type": "mrkdwn", "text": "*Workflow:*\n${{ github.event.workflow_run.name }}"}
+                  ]
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {"type": "plain_text", "text": "Ver Logs"},
+                      "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                    }
+                  ]
+                }
+              ]
+            }'
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Create Issue on Failure
+        if: env.CREATE_ISSUE_ON_FAILURE == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.create({
+              title: 'Deploy Falhou: ${{ github.ref_name }}',
+              body: `## Deploy Falhou\n\nO deploy para a branch \`${{ github.ref_name }}\` falhou.\n\n**Workflow:** ${{ github.event.workflow_run.name }}\n**Run ID:** ${{ github.run_id }}\n\n[Ver logs do workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})`,
+              labels: ['deploy-failed']
+            })
+        env:
+          CREATE_ISSUE_ON_FAILURE: ${{ vars.CREATE_ISSUE_ON_FAILURE || 'false' }}
